@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../../authContext";
+import {Link} from "@primer/react";
 
 import logo from "../../assets/github-mark-white.svg";
 
@@ -14,6 +15,30 @@ function Signup() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const handleSignUp = async(e) =>{
+        try{
+          setLoading(true);
+
+          const res = await axios.post("https://localhost:3000/signup", {
+            email: email,
+            username: username,
+            password: password
+          })
+
+          localStorage.setItem("token", res.data.token);
+
+          localStorage.setItem("userID", res.data.userId);
+
+          setLoading(false);
+
+          window.location.href = '/';
+        } catch(err) {
+          setLoading(false);
+          alert("SignUp Failed!");
+          console.error(err);
+        }
+    }
 
     return (
         <div className="login-wrapper">
@@ -76,6 +101,7 @@ function Signup() {
             variant="primary"
             className="login-btn"
             disabled={loading}
+            onClick={handleSignUp}
           >
             {loading ? "Loading..." : "Signup"}
           </Button>
@@ -83,7 +109,7 @@ function Signup() {
 
         <div className="pass-box">
           <p>
-            Already have an account? <a href="/auth">Login</a>
+            Already have an account? <Link  to="/auth">Login</Link>
           </p>
         </div>
       </div>
