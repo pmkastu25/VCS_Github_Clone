@@ -13,4 +13,16 @@ yargs(hideBin(process.argv)).command("init", "Initialize a new repository", {}, 
         describe:"Add file to the staging area",
         type: "string"
     })
-}, addRepo).command("commit", "Commit changes to the repository", {}, commitRepo).command("push", "Push changes to the repository", {}, pushRepo).command("pull", "Pull changes to the repository", {}, pullRepo).command("revert", "Revert back to the previous commit", {}, revertRepo).demandCommand(1, "atleast one command is required").help().argv;
+}, (argv) => {
+    addRepo(argv.file);
+}).command("commit <message>", "Commit changes to the repository", (yargs)=>{
+    yargs.positional("message", {
+        describe:"Commit message",
+        type: "string"
+    })
+}, commitRepo).command("push", "Push changes to S3", {}, pushRepo).command("pull", "Pull changes from S3", {}, pullRepo).command("revert <commitID>", "Revert back to the previous commit", (yargs)=>{
+    yargs.positional("commitID", {
+        describe:"Commit ID to revert to",
+        type: "string"
+    })
+}, revertRepo).demandCommand(1, "atleast one command is required").help().argv;
