@@ -20,7 +20,9 @@ yargs(hideBin(process.argv)).command("init", "Initialize a new repository", {}, 
         describe:"Commit message",
         type: "string"
     })
-}, commitRepo).command("push", "Push changes to S3", {}, pushRepo).command("pull", "Pull changes from S3", {}, pullRepo).command("revert <commitID>", "Revert back to the previous commit", (yargs)=>{
+}, (argv) => {
+    commitRepo(argv.message);
+}).command("push", "Push changes to S3", {}, pushRepo).command("pull", "Pull changes from S3", {}, pullRepo).command("revert <commitID>", "Revert back to the previous commit", (yargs)=>{
     yargs.positional("commitID", {
         describe:"Commit ID to revert to",
         type: "string"
