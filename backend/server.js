@@ -29,4 +29,6 @@ yargs(hideBin(process.argv)).command("init", "Initialize a new repository", {}, 
         describe:"Commit ID to revert to",
         type: "string"
     })
-}, revertRepo).demandCommand(1, "atleast one command is required").help().argv;
+}, (argv) => {
+    revertRepo(argv.commitID);
+}).demandCommand(1, "atleast one command is required").help().argv;
