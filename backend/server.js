@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import http from "http";
+import {Server} from "socket.io";
 
 import yargs from 'yargs';
 import {hideBin} from 'yargs/helpers';
@@ -51,5 +52,43 @@ function startServer() {
         console.log("Connected to MongoDB");
     }).catch((err) => {
         console.error("Error connecting to MongoDB:", err);
+    });
+
+    //to establish a live constant connection between the client and server
+    app.use(cors({origin: "*"}));
+
+    app.get("/", (req, res)=>{
+        res.send("Welcome!");
+    });
+
+    const httpServer = http.createServer(app);
+    
+    const io = new Server(httpServer, {
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST"]
+        }
+    });
+
+    const user = "test";
+
+    io.on("connection", (socket)=>{
+        socket.on("joinRoom", (userID)=>{
+        console.log("=====");
+        console.log(user);
+        console.log("=====");
+        socket.join(userID);
+        });
+    });
+
+    const db = mongoose.connection;
+
+    db.once("open", () => {
+        console.log("CRUD operations performed on the database");
+        //CRUD operations
+    });
+
+    httpServer.listen(port, ()=>{
+        console.log(`Server is running on port ${port}`);
     });
 }
