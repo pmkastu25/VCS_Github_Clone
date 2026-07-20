@@ -10,7 +10,7 @@ import {pushRepo} from './controllers/push.js';
 import {pullRepo} from './controllers/pull.js';
 import {revertRepo} from './controllers/revert.js';
 
-yargs(hideBin(process.argv)).command("init", "Initialize a new repository", {}, initRepo).command("add <file>", "Add a new file to the Repository", (yargs)=>{
+yargs(hideBin(process.argv)).command("start", "Starts a new server", {}, startServer).command("init", "Initialize a new repository", {}, initRepo).command("add <file>", "Add a new file to the Repository", (yargs)=>{
     yargs.positional("file", {
         describe:"Add file to the staging area",
         type: "string"
@@ -32,3 +32,7 @@ yargs(hideBin(process.argv)).command("init", "Initialize a new repository", {}, 
 }, (argv) => {
     revertRepo(argv.commitID);
 }).demandCommand(1, "atleast one command is required").help().argv;
+
+function startServer() {
+    console.log("Server start called");
+}
