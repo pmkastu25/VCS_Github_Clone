@@ -1,4 +1,9 @@
 import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import http from "http";
 
 import yargs from 'yargs';
 import {hideBin} from 'yargs/helpers';
@@ -34,5 +39,17 @@ yargs(hideBin(process.argv)).command("start", "Starts a new server", {}, startSe
 }).demandCommand(1, "atleast one command is required").help().argv;
 
 function startServer() {
-    console.log("Server start called");
+    const app = express();
+    const port = process.env.PORT || 3000;
+
+    app.use(bodyParser.json());
+    app.use(express.json());
+
+    const mongoURI = process.env.MONGODB_URI;
+
+    mongoose.connect(mongoURI).then(() => {
+        console.log("Connected to MongoDB");
+    }).catch((err) => {
+        console.error("Error connecting to MongoDB:", err);
+    });
 }
