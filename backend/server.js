@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import http from "http";
 import {Server} from "socket.io";
+import { mainRouter } from "./routes/main.router.js";
 
 import yargs from 'yargs';
 import {hideBin} from 'yargs/helpers';
@@ -57,10 +58,8 @@ function startServer() {
     //to establish a live constant connection between the client and server
     app.use(cors({origin: "*"}));
 
-    app.get("/", (req, res)=>{
-        res.send("Welcome!");
-    });
-
+    app.use("/", mainRouter);
+    
     const httpServer = http.createServer(app);
     
     const io = new Server(httpServer, {
