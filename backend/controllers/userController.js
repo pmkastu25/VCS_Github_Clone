@@ -1,7 +1,7 @@
 import 'dotenv/config.js';
 import jwt from 'jsonwebtoken';
-import bcrypt from  'bcryptjs';
-import {MongoClient} from 'mongodb';
+import bcrypt, { hash } from  'bcryptjs';
+import {MongoClient, ReturnDocument} from 'mongodb';
 import { ObjectId } from 'mongodb';
 
 const uri = process.env.MONGODB_URI;
@@ -112,10 +112,51 @@ export const getUserProfile = async(req, res) => {
     }
 }
 
-export const updateUserProfile = (req, res) => {
-    res.send("Updating a user profile");
+export const updateUserProfile = async(req, res) => {
+    const {id} = req.params;
+    const {email, password} = req.body;
+
+    try{
+        let updateDetails = {email};
+        if(password){
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+            updateDetails.password = hashedPassword;
+        }
+
+        await connectClient();
+        const db = client.db("githubClone");
+        const userCollection = db.collection("users");
+
+        const result = await userCollection.findOneAndUpdate({_id: new ObjectId(id)}, {$set: updateDetails}, {returnDocument: "after"});
+        if(!result){
+            res.status(404).send("User not found");
+        }
+
+        res.status(200).send(result);
+    }catch(err){
+        console.log("Error during updating user profile");
+        res.status(500).send("Server Error!");
+    }
 }
 
-export const deleteUserProfile = (req, res) => {
-    res.send("Deleting a particular User Profile");
+export const deleteUserProfile = async(req, res) => {
+    const {id} = req.params;
+
+    try{
+        await connectClient()
+        const db = client.db("githubClone");
+        const userCollection = db.collection("users");
+
+        const result = await userCollection.deleteOne({_id: new ObjectId(id)});
+
+        if(result.deleteCount == 0){
+            res.status(404).send("User not Found!");
+        }
+
+        res.json({message:"User Profile Deleted!"});
+    } catch(err){
+        console.log("Error during deleting a profile");
+        res.status(500).send("Server Error during deleting a profile");
+    }
 }
