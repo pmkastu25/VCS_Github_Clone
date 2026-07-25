@@ -2,6 +2,7 @@ import 'dotenv/config.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from  'bcryptjs';
 import {MongoClient} from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 const uri = process.env.MONGODB_URI;
 
@@ -15,8 +16,18 @@ async function connectClient(){
     await client.connect();
 }
 
-export const getAllUsers = (req, res) => {
-    res.send("Getting all users");
+export const getAllUsers = async(req, res) => {
+    try{
+        await connectClient();
+        const db = client.db("githubClone");
+        const userCollection = db.collection("users");
+
+        const users = await userCollection.find({}).toArray();
+        res.status(200).json(users);
+    } catch(err){
+        console.log("Error while fetching all the users!");
+        res.status(500).send("Server Error");
+    }
 }
 
 export const signUp = async(req, res) => {
@@ -80,8 +91,25 @@ export const login = async(req, res) => {
     }
 }
 
-export const getUserProfile = (req, res) => {
-    res.send("Getting a user profile");
+export const getUserProfile = async(req, res) => {
+    try{
+        const {id} = req.params;
+
+        await connectClient();
+        const db = client.db("githubClone");
+        const userCollection = db.collection("users");
+
+        const user = await userCollection.findOne({_id: new ObjectId(id)});
+
+        if(!user){
+            res.status(404).send("User not found!");
+        }
+
+        res.status(200).send(user);
+    } catch(err){
+        console.log("Error fetching user profile!");
+        res.status(500).send("Server Error while fetching user profile");
+    }
 }
 
 export const updateUserProfile = (req, res) => {
