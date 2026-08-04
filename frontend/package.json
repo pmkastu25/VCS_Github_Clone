@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@primer/react": "^38.34.0",
     "@rolldown/binding-win32-x64-msvc": "^1.2.1",
+    "axios": "^1.19.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.2"

@@ -1,0 +1,14 @@
+.login-wrapper{
+    margin: 0;
+    padding: 0;
+    align-content: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+.login-box{
+    background: #24292F;
+    padding: 20px;
+    margin: 0 150px 0 150px;
+    
+}
