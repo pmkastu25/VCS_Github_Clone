@@ -1,64 +1,94 @@
-import React from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useAuth } from "../../authContext";
 
-import {PageHeader} from "@primer/react";
-import {Button} from "@primer/react";
-import '../auth/auth.css';
+import logo from "../../assets/github-mark-white.svg";
+
+import { PageHeader } from "@primer/react";
+import { Button } from "@primer/react";
+import "./auth.css";
 
 function Signup() {
+
+    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+
     return (
         <div className="login-wrapper">
-            <div className="login-logo-container">
-                <img src="" />
-                <div className='box'>
-                <PageHeader>
-                    <PageHeader.TitleArea>
-                        <PageHeader.Title>Sign Up</PageHeader.Title>
-                    </PageHeader.TitleArea>
-                </PageHeader>
-                </div>
-            </div>
+      <div className="login-logo-container">
+        <img className="logo-login" src={logo} alt="Logo" />
+      </div>
 
-            <div className="login-box">
-                <div className="login-username">
-                     <label for="Username">Username: </label>
-                     <input type="text"
-                     name="Username"
-                     id="Username"
-                     autoComplete='off'
-                     required/>
-                </div>
-                <div className="login-email">
-                    <label for="Email">Email: </label>
-                    <input type="email"
-                     name="Email"
-                     id="Email"
-                     autoComplete='off'
-                     required/>
-                </div>
-                <div className="login-password">
-                    <label for="Password">Password: </label>
-                    <input type="password"
-                    name="Password"
-                    id="Password"
-                    autoComplete='off'
-                    required/>
-                </div>
-
-                <div className='sign-up-btn'>
-                <Button>
-                    Sign Up
-                </Button>
-            </div>
-
-            <div>
-                <p>
-                    Already a customer? <a href="/login">Login</a>
-                </p>
-            </div>
-            </div>
+      <div className="login-box-wrapper">
+        <div className="login-heading">
+          {/* <Box sx={{ padding: 1 }}> */}
+            <PageHeader>
+              <PageHeader.TitleArea variant="large">
+                <PageHeader.Title>Sign Up</PageHeader.Title>
+              </PageHeader.TitleArea>
+            </PageHeader>
+          {/* </Box> */}
         </div>
-    );
-}
+
+        <div className="login-box">
+          <div>
+            <label className="label">Username</label>
+            <input
+              autoComplete="off"
+              name="Username"
+              id="Username"
+              className="input"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="label">Email address</label>
+            <input
+              autoComplete="off"
+              name="Email"
+              id="Email"
+              className="input"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="div">
+            <label className="label">Password</label>
+            <input
+              autoComplete="off"
+              name="Password"
+              id="Password"
+              className="input"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <Button
+            variant="primary"
+            className="login-btn"
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Signup"}
+          </Button>
+        </div>
+
+        <div className="pass-box">
+          <p>
+            Already have an account? <a href="/auth">Login</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Signup;
