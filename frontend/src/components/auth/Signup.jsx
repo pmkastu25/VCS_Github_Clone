@@ -17,6 +17,7 @@ function Signup() {
     const [loading, setLoading] = useState(false);
 
     const handleSignUp = async(e) =>{
+        e.preventDefault();
         try{
           setLoading(true);
 
@@ -30,6 +31,7 @@ function Signup() {
 
           localStorage.setItem("userID", res.data.userId);
 
+          setCurrentUser(res.data.userId);
           setLoading(false);
 
           window.location.href = '/';
