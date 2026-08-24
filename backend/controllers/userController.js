@@ -57,7 +57,7 @@ export const signUp = async(req, res) => {
         const result = await userCollection.insertOne(newUser);
 
         const token = jwt.sign({id: result.resultId}, process.env.JWT_SECRET_KEY, {expiresIn:"1hr"});
-        res.json({token});
+        res.json({token, userId: result.resultId});
 
     } catch(err){
         console.log("Error SigningUp", err.message);
