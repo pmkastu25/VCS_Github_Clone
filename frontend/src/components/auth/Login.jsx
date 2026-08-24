@@ -9,25 +9,26 @@ import { PageHeader } from "@primer/react";
 import { Button } from "@primer/react";
 import "./auth.css";
 
-function Signup() {
+function Login() {
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
-
-    useEffect(()=>{
+     useEffect(()=>{
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
         setCurrentUser(null);
     })
 
-     const {currentUser,setCurrentUser} = useAuth();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+
+     const {setCurrentUser} = useAuth();
 
     const handleLogin = async(e) =>{
+        e.preventDefault();
         try{
           setLoading(true);
 
-          const res = await axios.post("https://localhost:3002/auth", {
+          const res = await axios.post("http://localhost:3002/auth", {
             email: email,
             password: password
           })
@@ -36,15 +37,14 @@ function Signup() {
 
           localStorage.setItem("userID", res.data.userId);
 
-          currentUser = res.data.userId;
-          setCurrentUser(currentUser);
+          setCurrentUser(res.data.userId);
           setLoading(false);
 
           window.location.href = '/';
         } catch(err) {
           setLoading(false);
           alert("Login Failed!");
-          console.error(err);
+          console.log(err.message);
         }
     }
 
@@ -112,4 +112,4 @@ function Signup() {
   );
 };
 
-export default Signup;
+export default Login;

@@ -17,20 +17,22 @@ function Signup() {
     const [loading, setLoading] = useState(false);
 
     const {setCurrentUser} = useAuth();
-    
+
     const handleSignUp = async(e) =>{
         e.preventDefault();
         try{
           setLoading(true);
 
-          const res = await axios.post("https://localhost:3002/signup", {
+          const res = await axios.post("http://localhost:3002/signup", {
             email: email,
             username: username,
             password: password
           })
 
+          console.log("Response received");
+          console.log(res);
+          console.log("Response data:", res.data);
           localStorage.setItem("token", res.data.token);
-
           localStorage.setItem("userID", res.data.userId);
 
           setCurrentUser(res.data.userId);
