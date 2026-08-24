@@ -16,12 +16,14 @@ function Signup() {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const {setCurrentUser} = useAuth();
+    
     const handleSignUp = async(e) =>{
         e.preventDefault();
         try{
           setLoading(true);
 
-          const res = await axios.post("https://localhost:3000/signup", {
+          const res = await axios.post("https://localhost:3002/signup", {
             email: email,
             username: username,
             password: password
