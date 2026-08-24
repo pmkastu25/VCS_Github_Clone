@@ -14,13 +14,14 @@ function Signup() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
-    const [currentUser,setCurrentUser] = useAuth();
 
     useEffect(()=>{
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
         setCurrentUser(null);
     })
+
+     const {currentUser,setCurrentUser} = useAuth();
 
     const handleLogin = async(e) =>{
         try{
@@ -35,7 +36,8 @@ function Signup() {
 
           localStorage.setItem("userID", res.data.userId);
 
-          setCurrentUser(res.data.userId);
+          currentUser = res.data.userId;
+          setCurrentUser(currentUser);
           setLoading(false);
 
           window.location.href = '/';
